@@ -1,0 +1,34 @@
+{
+  "api_version": "graphos.io/v1",
+  "artifacts": {
+    "connector_manifest.yml": "d1647dd1451154da23d68c09694f6c4de89dec09977b2dde6d4691b7ba8b728b",
+    "opensearch_mcp/ontology/fixtures/records.json": "137764f5ccabad6dbabf62edb156e28c0b3609e14e03d0bd41bf3f4241039437",
+    "opensearch_mcp/ontology/mappings/source.yaml": "7f2a6dd5724c3fa63ee2d50b09eb21d4f6c93829aaa61e9bae7c00d6dcc782ae",
+    "opensearch_mcp/ontology/migrations/manifest.json": "6f5aebe42d8765e2c80d137a0a1ac00d8e35c343e0dfbf14f0a40a535cef0483",
+    "opensearch_mcp/ontology/opensearch.ttl": "53e123604ca1746e5b25a96e4d863dd59a4b0df6cf1a0c6abdda181b8f416ac5",
+    "opensearch_mcp/ontology/shapes/connector.shacl.ttl": "f4420ced553e1ae900d44dfe2c237667b22905cc66907673e66bf88988be1691"
+  },
+  "checks": {
+    "declared_tool_schema": "not-applicable",
+    "manifest_integrity": "passed",
+    "privacy_contract": "passed",
+    "shacl_parse": "passed",
+    "synthetic_fixture_contract": "not-applicable"
+  },
+  "compatibility": {
+    "agent_utilities": ">=2.5.0,<3",
+    "bundle_schema": "2",
+    "epistemic_graph": ">=2.27.0,<3"
+  },
+  "connector": "opensearch-mcp",
+  "kind": "ConnectorSourceAttestation",
+  "live_certified": false,
+  "mode": "offline-source",
+  "schema_version": "2",
+  "signature": null,
+  "signature_algorithm": "none",
+  "signer": "UNSIGNED-PREVIEW",
+  "signing_public_key": "",
+  "status": "source-validated",
+  "validated_at": "2026-08-26T21:05:00Z"
+}

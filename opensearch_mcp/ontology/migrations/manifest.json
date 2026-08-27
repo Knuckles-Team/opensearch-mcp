@@ -1,0 +1,6 @@
+{
+  "connector": "opensearch-mcp",
+  "current_ontology_source": "opensearch",
+  "migrations": [],
+  "schema_version": "1"
+}

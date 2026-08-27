@@ -1,0 +1,61 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://knuckles.team/kg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# OpenSearch ontology — models the search tier (CA-50, DEC-CA-09) fronted by the
+# opensearch-mcp tool surface: indices, their aliases, and reindex-request runs.
+# This tier is a DERIVED PROJECTION of the KG (DEC-CA-01) — never a source of
+# truth in its own right — so `:SearchIndex` links outward to the external
+# `:ObjectType` classes it indexes rather than owning that data itself. All
+# classes/properties live in the SHARED `:` (kg#) namespace; only the
+# owl:Ontology node gets the per-package IRI. Backs the opensearch-mcp tool
+# surface (opensearch_create_index / opensearch_search / opensearch_knn_search /
+# opensearch_hybrid_search / opensearch_ingest_pipeline / opensearch_read_dls_rules /
+# opensearch_apply_dls_bundle / opensearch_reindex_from_kg).
+
+# --- classes (owl:Class) ---
+
+:SearchIndex a owl:Class ;
+    rdfs:label "Search Index" ;
+    rdfs:comment "One OpenSearch index: a derived, rebuildable projection of KG node/document content (opensearch_create_index / opensearch_update_mapping / opensearch_update_settings)." .
+
+:SearchAlias a owl:Class ;
+    rdfs:label "Search Alias" ;
+    rdfs:comment "An OpenSearch alias pointing at one or more SearchIndex instances, swapped atomically on rollover (opensearch_manage_alias / opensearch_rollover)." .
+
+:IndexingRun a owl:Class ;
+    rdfs:label "Indexing Run" ;
+    rdfs:comment "One reindex-from-KG request: a durable record of the ask, not the work itself — CA-24 performs the actual rebuild (opensearch_reindex_from_kg)." .
+
+# --- links (owl:ObjectProperty) ---
+
+:indexes a owl:ObjectProperty ;
+    rdfs:label "indexes" ;
+    rdfs:comment "Links a SearchIndex to the external :ObjectType (a KG node class) it is a derived projection of." ;
+    rdfs:domain :SearchIndex ;
+    rdfs:range :ObjectType .
+
+:aliasOf a owl:ObjectProperty ;
+    rdfs:label "alias of" ;
+    rdfs:comment "Links a SearchAlias to the SearchIndex it currently resolves to." ;
+    rdfs:domain :SearchAlias ;
+    rdfs:range :SearchIndex .
+
+:rebuildsIndex a owl:ObjectProperty ;
+    rdfs:label "rebuilds index" ;
+    rdfs:comment "Links an IndexingRun to the SearchIndex (or index-pattern) its reindex request targets." ;
+    rdfs:domain :IndexingRun ;
+    rdfs:range :SearchIndex .
+
+<http://knuckles.team/kg/opensearch> a owl:Ontology ;
+    rdfs:label "OpenSearch Ontology" ;
+    rdfs:comment """OpenSearch search-tier topology — indices, aliases, and
+    reindex-request runs — federated into the agent-utilities knowledge-graph
+    hub. The index itself is a derived, fully rebuildable projection of the KG
+    (DEC-CA-01); this ontology models the search tier's own admin/lifecycle
+    state, not a second copy of the KG's own domain classes.""" ;
+    owl:imports <http://knuckles.team/kg> .

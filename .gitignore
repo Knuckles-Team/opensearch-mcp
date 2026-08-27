@@ -1,0 +1,18 @@
+.env
+__pycache__/
+*.pyc
+*.log
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pytest_tmp/
+.venv/
+
+# P0.2/P0.3 (graph-os-completion-program): materialized, dev-machine-only
+# symlink to the real agent-utilities checkout, used so this repo resolves
+# standalone against its own tracked lock instead of the ecosystem workspace.
+# Never tracked.
+.uv-workspace-siblings/

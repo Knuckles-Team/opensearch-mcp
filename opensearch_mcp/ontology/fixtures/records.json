@@ -1,0 +1,5 @@
+{
+  "connector": "opensearch-mcp",
+  "fixtures": [],
+  "schema_version": "1"
+}
