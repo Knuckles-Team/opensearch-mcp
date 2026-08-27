@@ -124,11 +124,6 @@ class OpenSearchApi:
 
     def knn_plugin_enabled(self) -> bool:
         """Live check of the k-NN plugin's runtime-enabled flag (never assumed)."""
-        settings = self._perform(
-            "GET",
-            "/_cluster/settings",
-            body=None,
-        )
         # `include_defaults` isn't expressible via the high-level client's
         # settings helper params without extra plumbing; ask the flat path
         # directly, matching services/opensearch/AGENTS.md's own verification.
@@ -142,22 +137,33 @@ class OpenSearchApi:
             return False
 
     # ── index admin (typed OntologyActions per DEC-CA-07) ─────────────────
-    def create_index(self, index: str, body: dict[str, Any] | None = None) -> dict[str, Any]:
+    def create_index(
+        self, index: str, body: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         try:
             return self._client.indices.create(index=index, body=body or {})
         except Exception as exc:  # noqa: BLE001
-            if isinstance(exc, TransportError) and getattr(exc, "status_code", None) == 400:
+            if (
+                isinstance(exc, TransportError)
+                and getattr(exc, "status_code", None) == 400
+            ):
                 info = getattr(exc, "info", {}) or {}
                 err = (info.get("error") or {}) if isinstance(info, dict) else {}
                 if err.get("type") == "resource_already_exists_exception":
                     # Idempotent per this lane's contract: creating an index
                     # that already exists is not an error.
-                    return {"index": index, "acknowledged": True, "already_exists": True}
+                    return {
+                        "index": index,
+                        "acknowledged": True,
+                        "already_exists": True,
+                    }
             raise_for_transport_error(exc, operation=f"create_index({index})")
 
     def update_mapping(self, index: str, properties: dict[str, Any]) -> dict[str, Any]:
         try:
-            return self._client.indices.put_mapping(index=index, body={"properties": properties})
+            return self._client.indices.put_mapping(
+                index=index, body={"properties": properties}
+            )
         except Exception as exc:  # noqa: BLE001
             raise_for_transport_error(exc, operation=f"update_mapping({index})")
 
@@ -180,16 +186,23 @@ class OpenSearchApi:
 
     def update_settings(self, index: str, settings: dict[str, Any]) -> dict[str, Any]:
         try:
-            return self._client.indices.put_settings(index=index, body={"index": settings})
+            return self._client.indices.put_settings(
+                index=index, body={"index": settings}
+            )
         except Exception as exc:  # noqa: BLE001
             raise_for_transport_error(exc, operation=f"update_settings({index})")
 
     def rollover(
-        self, alias: str, conditions: dict[str, Any] | None = None, new_index: str | None = None
+        self,
+        alias: str,
+        conditions: dict[str, Any] | None = None,
+        new_index: str | None = None,
     ) -> dict[str, Any]:
         try:
             target = f"{alias}/{new_index}" if new_index else alias
-            return self._client.indices.rollover(alias=target, body={"conditions": conditions or {}})
+            return self._client.indices.rollover(
+                alias=target, body={"conditions": conditions or {}}
+            )
         except Exception as exc:  # noqa: BLE001
             raise_for_transport_error(exc, operation=f"rollover({alias})")
 
@@ -258,7 +271,9 @@ class OpenSearchApi:
         body = {"size": capped, "query": {"hybrid": {"queries": queries}}}
         try:
             return self._client.search(
-                index=index, body=body, params={"search_pipeline": "hybrid-search-pipeline"}
+                index=index,
+                body=body,
+                params={"search_pipeline": "hybrid-search-pipeline"},
             )
         except Exception as exc:  # noqa: BLE001
             if _is_knn_disabled_error(exc):
@@ -272,17 +287,23 @@ class OpenSearchApi:
             raise_for_transport_error(exc, operation=f"hybrid_search({index})")
 
     # ── ingest pipelines ───────────────────────────────────────────────────
-    def put_ingest_pipeline(self, pipeline_id: str, body: dict[str, Any]) -> dict[str, Any]:
+    def put_ingest_pipeline(
+        self, pipeline_id: str, body: dict[str, Any]
+    ) -> dict[str, Any]:
         try:
             return self._client.ingest.put_pipeline(id=pipeline_id, body=body)
         except Exception as exc:  # noqa: BLE001
-            raise_for_transport_error(exc, operation=f"put_ingest_pipeline({pipeline_id})")
+            raise_for_transport_error(
+                exc, operation=f"put_ingest_pipeline({pipeline_id})"
+            )
 
     def get_ingest_pipeline(self, pipeline_id: str) -> dict[str, Any]:
         try:
             return self._client.ingest.get_pipeline(id=pipeline_id)
         except Exception as exc:  # noqa: BLE001
-            raise_for_transport_error(exc, operation=f"get_ingest_pipeline({pipeline_id})")
+            raise_for_transport_error(
+                exc, operation=f"get_ingest_pipeline({pipeline_id})"
+            )
 
     # ── security / DLS (never hand-authored — applies a CA-16/26 bundle) ──
     def read_dls_rules(self, role: str) -> dict[str, Any]:

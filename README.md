@@ -122,6 +122,54 @@ predicate from scratch.
 
 ## Environment Variables
 
+<!-- ENV-VARS-TABLE:START -->
+
+#### Package environment variables
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `OPENSEARCH_URL` | `https://opensearch.arpa` |  |
+| `ENABLE_DELEGATION` | `True` | opensearch-mcp has NO fixed/service-credential fallback — every request carries the calling principal's own token, exchanged for one scoped to the audience below. These flags are the fleet-shared MCP OIDC-delegation surface (agent_utilities.mcp.server_factory / delegated_auth), not opensearch-mcp-specific, but MUST be enabled for this package's tools to work at all: |
+| `OIDC_CONFIG_URL` | `https://keycloak.arpa/realms/homelab/.well-known/openid-configuration` |  |
+| `OIDC_CLIENT_ID` | — |  |
+| `OIDC_CLIENT_SECRET_REF` | — |  |
+| `OPENSEARCH_KEYCLOAK_CLIENT_ID` | `opensearch` | Audience/scope this package exchanges the caller's token for — defaults to OPENSEARCH_KEYCLOAK_CLIENT_ID if --audience isn't passed at MCP startup. |
+| `OPENSEARCH_TLS_PROFILE` | — |  |
+| `OPENSEARCH_TLS_PROFILE_REF` | — |  |
+| `OPENSEARCHTOOL` | `True` |  |
+| `INGESTTOOL` | `True` |  |
+
+#### Inherited agent-utilities variables (apply to every connector)
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `TRANSPORT` | `stdio` | MCP transport: `stdio` \| `streamable-http` \| `sse` |
+| `HOST` | `127.0.0.1` | Loopback bind host (set an authenticated ingress explicitly) |
+| `PORT` | `8000` | Bind port (HTTP transports) |
+| `MCP_TOOL_MODE` | `intent` | Tool surface: `intent` \| `condensed` \| `verbose` \| `both` |
+| `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
+| `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
+| `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
+| `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
+| `EUNOMIA_TYPE` | `none` | Authorization mode: `none` \| `embedded` \| `remote` |
+| `EUNOMIA_POLICY_FILE` | `mcp_policies.json` | Embedded Eunomia policy file |
+| `EUNOMIA_REMOTE_URL` | — | Remote Eunomia authorization server URL |
+| `ENABLE_OTEL` | `False` | Enable OpenTelemetry export |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | — | OTLP collector endpoint |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP child auth: `oidc-client-credentials` \| `basic` \| `none` |
+| `MCP_BASIC_AUTH_USERNAME` | — | HTTP Basic username (`MCP_CLIENT_AUTH=basic`) |
+| `MCP_BASIC_AUTH_PASSWORD_REF` | `secret://identity/mcp-basic-password` | Runtime secret reference for HTTP Basic auth (`MCP_CLIENT_AUTH=basic`) |
+| `DEBUG` | `False` | Verbose logging |
+| `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
+| `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
+| `PROVIDER` | `openai` | LLM provider for the agent |
+| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
+
+_10 package + 22 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+<!-- ENV-VARS-TABLE:END -->
+
+
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `https://opensearch.arpa`. |
@@ -157,3 +205,46 @@ predicate from scratch.
 See `docs/` for architecture, configuration, and deployment notes, and
 `AGENTS.md` for domain-specific traps (the calling-principal invariant, the
 k-NN-disabled degrade path, and the DLS-bundle-never-hand-authored rule).
+
+## Available MCP Tools
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `opensearch_apply_dls_bundle` | `OPENSEARCHTOOL` | Apply a CA-16/26-rendered policy bundle's OpenSearch renderings. |
+| `opensearch_ingest_pipeline` | `OPENSEARCHTOOL` | Read or define an ingest pipeline. |
+| `opensearch_reindex_from_kg` | `INGESTTOOL` | Request a reindex of ``index_pattern`` from the KG's current state. |
+
+#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
+
+<details>
+<summary>18 per-operation tools — one per public API method (click to expand)</summary>
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `opensearch_apply_dls_bundle_rendering` | `OPEN_SEARCH_APITOOL` | Apply ONE already-validated ``renderings.opensearch`` entry. |
+| `opensearch_cluster_health` | `OPEN_SEARCH_APITOOL` | Invoke the cluster_health operation. |
+| `opensearch_create_index` | `OPENSEARCHTOOL` | Invoke the create_index operation. |
+| `opensearch_delete_index` | `OPENSEARCHTOOL` | Invoke the delete_index operation. |
+| `opensearch_get_aliases` | `OPENSEARCHTOOL` | Invoke the get_aliases operation. |
+| `opensearch_get_ingest_pipeline` | `OPEN_SEARCH_APITOOL` | Invoke the get_ingest_pipeline operation. |
+| `opensearch_hybrid_search` | `OPENSEARCHTOOL` | OpenSearch's native hybrid (lexical + vector) query compound clause. |
+| `opensearch_ingest_pipeline__get` | `MUTATINGTOOL` | Read or define an ingest pipeline. |
+| `opensearch_ingest_pipeline__put` | `MUTATINGTOOL` | Read or define an ingest pipeline. |
+| `opensearch_knn_plugin_enabled` | `OPEN_SEARCH_APITOOL` | Live check of the k-NN plugin's runtime-enabled flag (never assumed). |
+| `opensearch_knn_search` | `OPENSEARCHTOOL` | Invoke the knn_search operation. |
+| `opensearch_manage_alias` | `OPENSEARCHTOOL` | Apply one or more alias actions (``{"add": {...}}``/``{"remove": {...}}``). |
+| `opensearch_put_ingest_pipeline` | `OPEN_SEARCH_APITOOL` | Invoke the put_ingest_pipeline operation. |
+| `opensearch_read_dls_rules` | `OPENSEARCHTOOL` | Read one OpenSearch security-plugin role's index permissions/DLS query. |
+| `opensearch_rollover` | `OPENSEARCHTOOL` | Invoke the rollover operation. |
+| `opensearch_search` | `OPENSEARCHTOOL` | Invoke the search operation. |
+| `opensearch_update_mapping` | `OPENSEARCHTOOL` | Invoke the update_mapping operation. |
+| `opensearch_update_settings` | `OPENSEARCHTOOL` | Invoke the update_settings operation. |
+
+</details>
+
+_3 action-routed tool(s) · 18 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->

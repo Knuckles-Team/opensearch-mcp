@@ -86,7 +86,9 @@ def raise_for_transport_error(exc: Exception, *, operation: str) -> None:
         raise exc
     if isinstance(exc, NotFoundError):
         raise OpenSearchApiError(
-            f"OpenSearch {operation}: not found", status_code=404, body=getattr(exc, "info", None)
+            f"OpenSearch {operation}: not found",
+            status_code=404,
+            body=getattr(exc, "info", None),
         ) from exc
     if isinstance(exc, TransportError):
         raise OpenSearchApiError(
@@ -94,4 +96,6 @@ def raise_for_transport_error(exc: Exception, *, operation: str) -> None:
             status_code=getattr(exc, "status_code", None),
             body=getattr(exc, "info", None),
         ) from exc
-    raise OpenSearchApiError(f"OpenSearch {operation} failed (transport): {exc}") from exc
+    raise OpenSearchApiError(
+        f"OpenSearch {operation} failed (transport): {exc}"
+    ) from exc

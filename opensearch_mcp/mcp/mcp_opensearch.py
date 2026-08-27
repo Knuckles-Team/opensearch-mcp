@@ -134,7 +134,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
     @mcp.tool(tags={"index", "mutating"})
     async def opensearch_update_mapping(
         index: str = Field(description="Index name."),
-        properties: dict[str, Any] = Field(description="Field-name -> mapping dict to merge in."),
+        properties: dict[str, Any] = Field(
+            description="Field-name -> mapping dict to merge in."
+        ),
     ) -> dict[str, Any]:
         """Add/merge field mappings into an existing index (non-destructive)."""
         return get_client().update_mapping(index, properties)
@@ -154,7 +156,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(tags={"index"})
     async def opensearch_get_aliases(
-        index: str = Field(default="*", description="Index or index-pattern to inspect."),
+        index: str = Field(
+            default="*", description="Index or index-pattern to inspect."
+        ),
     ) -> dict[str, Any]:
         """List aliases for an index or index-pattern (read-only)."""
         return get_client().get_aliases(index)
@@ -162,7 +166,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
     @mcp.tool(tags={"index", "mutating"})
     async def opensearch_update_settings(
         index: str = Field(description="Index name."),
-        settings: dict[str, Any] = Field(description="Dynamic index settings to apply."),
+        settings: dict[str, Any] = Field(
+            description="Dynamic index settings to apply."
+        ),
     ) -> dict[str, Any]:
         """Update an index's dynamic settings (e.g. refresh_interval, replicas)."""
         return get_client().update_settings(index, settings)
@@ -182,7 +188,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
         conditions: dict[str, Any] | None = Field(
             default=None, description="Rollover conditions (max_age/max_docs/max_size)."
         ),
-        new_index: str = Field(default="", description="Explicit name for the new index (optional)."),
+        new_index: str = Field(
+            default="", description="Explicit name for the new index (optional)."
+        ),
     ) -> dict[str, Any]:
         """Roll an alias over to a new backing index once conditions are met.
 
@@ -213,7 +221,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
     async def opensearch_search(
         index: str = Field(description="Index or index-pattern to search."),
         query: dict[str, Any] = Field(description="OpenSearch Query DSL object."),
-        size: int = Field(default=10, description="Max hits to return (capped at 100)."),
+        size: int = Field(
+            default=10, description="Max hits to return (capped at 100)."
+        ),
         source_fields: list[str] | None = Field(
             default=None, description="Optional _source field allowlist to project."
         ),
@@ -229,7 +239,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
         field: str = Field(description="knn_vector field name."),
         vector: list[float] = Field(description="Query vector."),
         k: int = Field(default=10, description="Number of nearest neighbors."),
-        size: int = Field(default=10, description="Max hits to return (capped at 100)."),
+        size: int = Field(
+            default=10, description="Max hits to return (capped at 100)."
+        ),
     ) -> dict[str, Any]:
         """k-NN vector search. **The k-NN plugin is disabled on this cluster**
         (pre-AVX2 homelab nodes, `services/opensearch/AGENTS.md`) — this tool
@@ -245,7 +257,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
         queries: list[dict[str, Any]] = Field(
             description="List of sub-query DSL objects combined by OpenSearch's hybrid query clause."
         ),
-        size: int = Field(default=10, description="Max hits to return (capped at 100)."),
+        size: int = Field(
+            default=10, description="Max hits to return (capped at 100)."
+        ),
     ) -> dict[str, Any]:
         """OpenSearch native hybrid (lexical + vector) search. Degrades the
         same way as ``opensearch_knn_search`` when a sub-query is a k-NN
@@ -260,7 +274,8 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
             default="get", description="'get' to read, 'put' to create/replace."
         ),
         body: dict[str, Any] | None = Field(
-            default=None, description="Pipeline definition ({'processors': [...]}) — required for 'put'."
+            default=None,
+            description="Pipeline definition ({'processors': [...]}) — required for 'put'.",
         ),
     ) -> dict[str, Any]:
         """Read or define an ingest pipeline."""
@@ -268,7 +283,9 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
         if action == "get":
             return client.get_ingest_pipeline(pipeline_id)
         if not body:
-            raise OpenSearchApiError("opensearch_ingest_pipeline(action='put') requires 'body'")
+            raise OpenSearchApiError(
+                "opensearch_ingest_pipeline(action='put') requires 'body'"
+            )
         return client.put_ingest_pipeline(pipeline_id, body)
 
     # ── security / DLS (never hand-authored here) ─────────────────────────
@@ -317,5 +334,11 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
                 index_pattern=entry["index_pattern"],
                 dls_query=entry["dls_query"],
             )
-            applied.append({"role": entry["role"], "index_pattern": entry["index_pattern"], "result": result})
+            applied.append(
+                {
+                    "role": entry["role"],
+                    "index_pattern": entry["index_pattern"],
+                    "result": result,
+                }
+            )
         return {"applied": applied, "count": len(applied)}

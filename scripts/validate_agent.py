@@ -63,7 +63,9 @@ async def main() -> int:
             print(f"FAIL: expected tools missing from discovery: {sorted(missing)}")
             return 1
 
-        print("\nCalling opensearch_search with no delegated principal token present...")
+        print(
+            "\nCalling opensearch_search with no delegated principal token present..."
+        )
         try:
             result = await client.call_tool(
                 "opensearch_search",
@@ -77,7 +79,9 @@ async def main() -> int:
             return 1
         except Exception as exc:  # noqa: BLE001 - this IS the expected/positive path
             message = str(exc)
-            print(f"EXPECTED failure (calling-principal invariant held): {type(exc).__name__}: {message}")
+            print(
+                f"EXPECTED failure (calling-principal invariant held): {type(exc).__name__}: {message}"
+            )
             if "delegat" not in message.lower() and "principal" not in message.lower():
                 print(
                     "FAIL: the failure was not attributable to the missing calling-"

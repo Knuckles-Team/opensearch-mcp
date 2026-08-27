@@ -24,7 +24,9 @@ _GOOD_BUNDLE = {
             {
                 "index_pattern": "kg-*",
                 "role": "ca_dls_demo_reader",
-                "dls_query": {"bool": {"must_not": {"term": {"marking": "restricted"}}}},
+                "dls_query": {
+                    "bool": {"must_not": {"term": {"marking": "restricted"}}}
+                },
             }
         ]
     },

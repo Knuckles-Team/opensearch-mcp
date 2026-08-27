@@ -8,14 +8,10 @@
       ],
       "env": {
         "MCP_TOOL_MODE": "intent",
-        "OPENSEARCH_URL": "https://opensearch.arpa",
-        "OPENSEARCHTOOL": "True",
         "INGESTTOOL": "True",
-        "ENABLE_DELEGATION": "True",
-        "OIDC_CONFIG_URL": "https://keycloak.arpa/realms/homelab/.well-known/openid-configuration",
-        "OIDC_CLIENT_ID": "",
-        "OIDC_CLIENT_SECRET_REF": "",
-        "OPENSEARCH_KEYCLOAK_CLIENT_ID": "opensearch"
+        "OPENSEARCHTOOL": "True",
+        "OPENSEARCH_KEYCLOAK_CLIENT_ID": "opensearch",
+        "OPENSEARCH_URL": "https://opensearch.arpa"
       }
     }
   }

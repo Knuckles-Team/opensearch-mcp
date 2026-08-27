@@ -20,8 +20,12 @@ class DlsRenderingEntry(BaseModel):
     shape and never constructs one of these itself.
     """
 
-    index_pattern: str = Field(description="OpenSearch index-pattern glob this rendering targets.")
-    role: str = Field(description="OpenSearch security-plugin role name to receive this DLS rule.")
+    index_pattern: str = Field(
+        description="OpenSearch index-pattern glob this rendering targets."
+    )
+    role: str = Field(
+        description="OpenSearch security-plugin role name to receive this DLS rule."
+    )
     dls_query: dict[str, Any] = Field(
         description="OpenSearch Query DSL object applied as the role's document-level-security filter."
     )

@@ -70,4 +70,6 @@ def test_raise_for_transport_error_wraps_generic_transport_error():
 
 def test_raise_for_transport_error_wraps_unexpected_exception():
     with pytest.raises(OpenSearchApiError, match="transport"):
-        raise_for_transport_error(RuntimeError("connection reset"), operation="search(kg-*)")
+        raise_for_transport_error(
+            RuntimeError("connection reset"), operation="search(kg-*)"
+        )

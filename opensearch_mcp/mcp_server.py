@@ -34,7 +34,7 @@ def get_mcp_instance() -> tuple[Any, ...]:
     )
 
     @mcp.custom_route("/health", methods=["GET"])
-    async def health_check(request: Request) -> JSONResponse:
+    async def health_check(_request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
     register_tool_surface(
