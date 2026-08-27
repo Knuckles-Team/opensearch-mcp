@@ -79,7 +79,7 @@ python -m opensearch_mcp
         "ENABLE_DELEGATION": "True",
         "OIDC_CONFIG_URL": "https://keycloak.arpa/realms/homelab/.well-known/openid-configuration",
         "OIDC_CLIENT_ID": "",
-        "OIDC_CLIENT_SECRET": "",
+        "OIDC_CLIENT_SECRET_REF": "",
         "OPENSEARCH_KEYCLOAK_CLIENT_ID": "opensearch"
       }
     }
@@ -127,7 +127,7 @@ predicate from scratch.
 | `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `https://opensearch.arpa`. |
 | `ENABLE_DELEGATION` | ✅ | Must be `True` — this package has no other credential path. |
 | `OIDC_CONFIG_URL` | ✅ | OIDC discovery document URL (shared agent-utilities MCP surface). |
-| `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` | ✅ | Confidential client used for the RFC 8693 token exchange. |
+| `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET_REF` | ✅ | Confidential client used for the RFC 8693 token exchange. |
 | `OPENSEARCH_KEYCLOAK_CLIENT_ID` | optional | Delegated-token audience. Defaults to `opensearch`. |
 | `OPENSEARCH_TLS_PROFILE` / `OPENSEARCH_TLS_PROFILE_REF` | optional | Named outbound TLS trust policy. |
 | `OPENSEARCHTOOL` | optional | Tool-group toggle (set `False` to disable the index/search/pipelines/security tools). Default `True`. |

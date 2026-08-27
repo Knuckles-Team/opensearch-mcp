@@ -41,7 +41,7 @@ would be backwards).
 ## Prerequisites & environment
 Same delegated-auth requirements as every other tool in this package
 (`OPENSEARCH_URL`, `ENABLE_DELEGATION`/`OIDC_CONFIG_URL`/`OIDC_CLIENT_ID`/
-`OIDC_CLIENT_SECRET`). No additional KG-side credentials — the `:IndexingRun`
+`OIDC_CLIENT_SECRET_REF`). No additional KG-side credentials — the `:IndexingRun`
 write runs through the process-owned `GraphComputeEngine` authority via
 `native_ingest.ingest_entities`.
 

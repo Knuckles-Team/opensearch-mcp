@@ -10,7 +10,7 @@ for the full, authoritative list — the code (`auth.py`, `mcp/mcp_opensearch.py
 
 Unlike most fleet packages, `opensearch-mcp` has **no fixed/service-credential
 fallback**. `ENABLE_DELEGATION=True` plus a working `OIDC_CONFIG_URL` /
-`OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET` are required for ANY tool in this
+`OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET_REF` are required for ANY tool in this
 package to authenticate — a `search`, `security`, or `index` call made
 without a valid delegated principal token raises rather than silently
 falling back to something that would work but bypass document-level

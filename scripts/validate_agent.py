@@ -7,7 +7,7 @@ path an MCP client (Claude, the multiplexer) actually uses (tool discovery +
 ``call_tool``), not a shortcut around it.
 
 Requires OIDC delegation to be configured (``ENABLE_DELEGATION``,
-``OIDC_CONFIG_URL``, ``OIDC_CLIENT_ID``, ``OIDC_CLIENT_SECRET``) AND a real
+``OIDC_CONFIG_URL``, ``OIDC_CLIENT_ID``, ``OIDC_CLIENT_SECRET_REF``) AND a real
 Bearer token on the inbound request — this package has no other credential
 path (see ``auth.py``). Because this harness runs the server over FastMCP's
 in-memory transport (no real inbound HTTP request), the delegated-auth
