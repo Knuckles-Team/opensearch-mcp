@@ -53,7 +53,7 @@ class OpenSearchApi:
     """Authenticated OpenSearch client — always constructed with a per-call
     token provider, never a static baked-in credential.
 
-    ``base_url`` is the bare OpenSearch origin (e.g. ``https://opensearch.arpa``).
+    ``base_url`` is the bare OpenSearch origin (e.g. ``http://localhost:9200``).
     """
 
     def __init__(

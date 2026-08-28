@@ -19,7 +19,7 @@ def test_opensearch_api_requires_a_credential():
     """Constructing the client with no token_provider AND no _test_basic_auth
     is refused outright — there is no unauthenticated path."""
     with pytest.raises(OpenSearchApiError, match="token_provider"):
-        OpenSearchApi("https://opensearch.arpa")
+        OpenSearchApi("http://localhost:9200")
 
 
 def test_delegated_token_raises_when_delegation_disabled(monkeypatch):

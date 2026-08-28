@@ -1,9 +1,32 @@
-# opensearch-mcp
+# Opensearch Mcp
+## CLI or API | MCP | Agent
 
-A Model Context Protocol (MCP) server, A2A agent, and API client for
-OpenSearch (the CA-50 search tier) integration.
-
+![PyPI - Version](https://img.shields.io/pypi/v/opensearch-mcp)
 ![MCP Server](https://badge.mcpx.dev?type=server 'MCP Server')
+![PyPI - Downloads](https://img.shields.io/pypi/dd/opensearch-mcp)
+![GitHub Repo stars](https://img.shields.io/github/stars/Knuckles-Team/opensearch-mcp)
+![GitHub forks](https://img.shields.io/github/forks/Knuckles-Team/opensearch-mcp)
+![GitHub contributors](https://img.shields.io/github/contributors/Knuckles-Team/opensearch-mcp)
+![PyPI - License](https://img.shields.io/pypi/l/opensearch-mcp)
+![GitHub](https://img.shields.io/github/license/Knuckles-Team/opensearch-mcp)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Knuckles-Team/opensearch-mcp)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Knuckles-Team/opensearch-mcp)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/Knuckles-Team/opensearch-mcp)
+![GitHub issues](https://img.shields.io/github/issues/Knuckles-Team/opensearch-mcp)
+![GitHub top language](https://img.shields.io/github/languages/top/Knuckles-Team/opensearch-mcp)
+![GitHub language count](https://img.shields.io/github/languages/count/Knuckles-Team/opensearch-mcp)
+![GitHub repo size](https://img.shields.io/github/repo-size/Knuckles-Team/opensearch-mcp)
+![GitHub repo file count (file type)](https://img.shields.io/github/directory-file-count/Knuckles-Team/opensearch-mcp)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/opensearch-mcp)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/opensearch-mcp)
+
+*Version: 0.1.0*
+
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
+> [official documentation](https://knuckles-team.github.io/opensearch-mcp/).
+
+---
 
 ## Table of Contents
 - [Overview](#overview)
@@ -16,7 +39,7 @@ OpenSearch (the CA-50 search tier) integration.
 
 ## Overview
 `opensearch-mcp` exposes a standardized interface to the platform's OpenSearch
-deployment (CA-50, `https://opensearch.arpa`) via the Model Context Protocol —
+deployment (CA-50, `http://localhost:9200`) via the Model Context Protocol —
 index/alias/mapping/settings/rollover admin, BM25/k-NN/hybrid search, ingest
 pipeline admin, and document-level-security (DLS) policy read/apply. A
 trigger-only `opensearch_reindex_from_kg` tool records a rebuild request as an
@@ -73,11 +96,11 @@ python -m opensearch_mcp
       "args": ["run", "opensearch-mcp"],
       "env": {
         "MCP_TOOL_MODE": "intent",
-        "OPENSEARCH_URL": "https://opensearch.arpa",
+        "OPENSEARCH_URL": "http://localhost:9200",
         "OPENSEARCHTOOL": "True",
         "INGESTTOOL": "True",
         "ENABLE_DELEGATION": "True",
-        "OIDC_CONFIG_URL": "https://keycloak.arpa/realms/homelab/.well-known/openid-configuration",
+        "OIDC_CONFIG_URL": "http://localhost:8080/realms/homelab/.well-known/openid-configuration",
         "OIDC_CLIENT_ID": "",
         "OIDC_CLIENT_SECRET_REF": "",
         "OPENSEARCH_KEYCLOAK_CLIENT_ID": "opensearch"
@@ -128,9 +151,9 @@ predicate from scratch.
 
 | Variable | Example | Description |
 |----------|---------|-------------|
-| `OPENSEARCH_URL` | `https://opensearch.arpa` |  |
+| `OPENSEARCH_URL` | `http://localhost:9200` |  |
 | `ENABLE_DELEGATION` | `True` | opensearch-mcp has NO fixed/service-credential fallback — every request carries the calling principal's own token, exchanged for one scoped to the audience below. These flags are the fleet-shared MCP OIDC-delegation surface (agent_utilities.mcp.server_factory / delegated_auth), not opensearch-mcp-specific, but MUST be enabled for this package's tools to work at all: |
-| `OIDC_CONFIG_URL` | `https://keycloak.arpa/realms/homelab/.well-known/openid-configuration` |  |
+| `OIDC_CONFIG_URL` | `http://localhost:8080/realms/homelab/.well-known/openid-configuration` |  |
 | `OIDC_CLIENT_ID` | — |  |
 | `OIDC_CLIENT_SECRET_REF` | — |  |
 | `OPENSEARCH_KEYCLOAK_CLIENT_ID` | `opensearch` | Audience/scope this package exchanges the caller's token for — defaults to OPENSEARCH_KEYCLOAK_CLIENT_ID if --audience isn't passed at MCP startup. |
@@ -172,7 +195,7 @@ _10 package + 22 inherited variable(s). Auto-generated from `.env.example` + the
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `https://opensearch.arpa`. |
+| `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `http://localhost:9200`. |
 | `ENABLE_DELEGATION` | ✅ | Must be `True` — this package has no other credential path. |
 | `OIDC_CONFIG_URL` | ✅ | OIDC discovery document URL (shared agent-utilities MCP surface). |
 | `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET_REF` | ✅ | Confidential client used for the RFC 8693 token exchange. |
@@ -248,3 +271,61 @@ k-NN-disabled degrade path, and the DLS-bundle-never-hand-authored rule).
 
 _3 action-routed tool(s) · 18 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
+
+---
+
+## Repository Owners
+
+<img width="100%" height="180em" src="https://github-readme-stats.vercel.app/api?username=example&show_icons=true&hide_border=true&&count_private=true&include_all_commits=true" />
+
+![GitHub followers](https://img.shields.io/github/followers/example)
+![GitHub User's stars](https://img.shields.io/github/stars/example)
+
+---
+
+## Contribute
+
+Contributions are welcome! Please ensure code quality by executing local checks before submitting pull requests:
+- Format code using `ruff format .`
+- Lint code using `ruff check .`
+- Validate type-safety with `mypy .`
+- Execute test suites using `pytest`
+
+
+<!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
+
+## Deploy with `agent-utilities-deployment`
+
+Provision this package with the consolidated **`agent-utilities-deployment`**
+workflow. It selects an installed-package, editable-source, or immutable-container
+path; records only runtime secret and TLS-profile references in `AgentConfig`; and
+runs doctor, registration, policy, observability, and rollback gates. Ask your agent
+to **"deploy `opensearch-mcp` with agent-utilities-deployment"**.
+
+| Install mode | Command |
+|------|---------|
+| Installed package | `uv tool install "opensearch-mcp[mcp]"`, then run `opensearch-mcp` |
+| Editable source | `uv pip install -e ".[agent]"`, then run `opensearch-mcp` |
+| Immutable container | deploy `registry.example.invalid/opensearch-mcp@sha256:<digest>` through the operator-selected orchestrator |
+
+The repository embeds no deployment profile, credential value, certificate path, or
+environment-specific endpoint. Supply those at runtime through `AgentConfig` and the
+configured secret provider.
+
+<!-- END agent-utilities-deployment -->
+
+<!-- GOVERNED-CAPABILITY:START -->
+## Governed capability contract
+
+This package ships a compact canonical skill surface with specialist procedures
+kept as referenced workflows. The current MCP tools, skill metadata,
+`connector_manifest.yml`, ontology, mappings, shapes, fixtures, migrations,
+tool-schema fingerprints, and certification metadata form one versioned
+capability contract. Validate them together; do not rely on stale tool names or
+historical per-task skill wrappers.
+
+Runtime endpoints, credentials, certificate trust, tenant identity, retention,
+and observability policy are deployment inputs and are never packaged values.
+See [Configuration, trust, and privacy](docs/configuration.md) before enabling a
+network transport, connector ingestion, GraphOS delegation, or trace export.
+<!-- GOVERNED-CAPABILITY:END -->

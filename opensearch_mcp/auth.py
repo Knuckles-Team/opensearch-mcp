@@ -33,8 +33,8 @@ scoped to the ``opensearch`` Keycloak client audience.
 plugin validates a Keycloak-issued bearer token directly (its
 ``openid_auth_domain`` treats the JWT's ``roles`` claim as OpenSearch backend
 roles) — proven live: a ``client_credentials`` grant against
-``https://keycloak.arpa/realms/homelab/protocol/openid-connect/token``
-authenticates successfully against ``https://opensearch.arpa/_cluster/health``.
+``http://localhost:8080/realms/homelab/protocol/openid-connect/token``
+authenticates successfully against ``http://localhost:9200/_cluster/health``.
 """
 
 from __future__ import annotations
@@ -104,7 +104,7 @@ def get_client(config: dict[str, Any] | None = None) -> Api:
     HTTP request — never a token captured once and baked in at construction
     time.
     """
-    base_url = setting("OPENSEARCH_URL", "https://opensearch.arpa")
+    base_url = setting("OPENSEARCH_URL", "http://localhost:9200")
     tls_profile = resolve_configured_tls_profile(
         "opensearch",
         profile_name=setting("OPENSEARCH_TLS_PROFILE", None),
