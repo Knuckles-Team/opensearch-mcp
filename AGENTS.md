@@ -13,7 +13,7 @@
 - agent-utilities >= 2.0.0, <3.0.0
 - Model Context Protocol (MCP)
 - `opensearch-py` (`opensearchpy.OpenSearch`) against the CA-50 search tier,
-  `https://opensearch.arpa` — the only new dependency this package adds.
+  `http://localhost:9200` — the only new dependency this package adds.
 
 ## Commands
 - `pytest`: Run tests

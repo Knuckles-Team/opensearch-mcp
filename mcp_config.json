@@ -11,7 +11,7 @@
         "INGESTTOOL": "True",
         "OPENSEARCHTOOL": "True",
         "OPENSEARCH_KEYCLOAK_CLIENT_ID": "opensearch",
-        "OPENSEARCH_URL": "https://opensearch.arpa"
+        "OPENSEARCH_URL": "http://localhost:9200"
       }
     }
   }

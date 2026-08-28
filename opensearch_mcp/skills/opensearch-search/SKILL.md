@@ -54,7 +54,7 @@ identity is what determines what comes back.
 
 | Variable | Required | Notes |
 |----------|----------|-------|
-| `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `https://opensearch.arpa`. |
+| `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `http://localhost:9200`. |
 | `ENABLE_DELEGATION` / `OIDC_CONFIG_URL` / `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET_REF` | ✅ | Shared agent-utilities MCP OIDC-delegation surface. Without this, every search tool raises rather than falling back to an unauthenticated or admin-scoped call. |
 | `OPENSEARCH_KEYCLOAK_CLIENT_ID` | optional | Delegated-token audience. Defaults to `opensearch`. |
 
