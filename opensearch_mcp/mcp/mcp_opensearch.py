@@ -46,16 +46,14 @@ _REQUIRED_RENDERING_FIELDS = ("index_pattern", "role", "dls_query")
 _RECOGNIZED_GOVERNS = {"M1"}
 
 
-def _validate_dls_bundle(bundle: dict[str, Any]) -> list[dict[str, Any]]:
-    """Validate a caller-supplied DEC-CA-04 policy bundle's shape.
-
-    Fails closed with a NAMED field error (this lane's explicit negative-test
-    requirement) rather than partially applying anything. Returns the
-    validated ``renderings.opensearch`` list on success.
-    """
+def _require_bundle_is_object(bundle: Any) -> None:
+    """Fail closed if the bundle is not itself a JSON object."""
     if not isinstance(bundle, dict):
         raise OpenSearchApiError("DLS bundle must be a JSON object")
 
+
+def _extract_opensearch_renderings(bundle: dict[str, Any]) -> list[Any]:
+    """Return the bundle's ``renderings.opensearch`` list, or fail closed."""
     renderings = bundle.get("renderings")
     if not isinstance(renderings, dict) or "opensearch" not in renderings:
         raise OpenSearchApiError(
@@ -66,24 +64,32 @@ def _validate_dls_bundle(bundle: dict[str, Any]) -> list[dict[str, Any]]:
         raise OpenSearchApiError(
             "malformed DLS bundle: 'renderings.opensearch' must be a non-empty list"
         )
+    return opensearch_renderings
 
+
+def _require_recognized_governs(bundle: dict[str, Any]) -> None:
+    """DEC-CA-04 Contract: an unrecognized (or missing) ``governs`` denies."""
     governs = bundle.get("governs")
     if not isinstance(governs, list) or not _RECOGNIZED_GOVERNS.issuperset(governs):
-        # DEC-CA-04 Contract: "A consumer that receives a bundle whose `governs`
-        # it does not recognize denies." Today the only legal value is ["M1"].
         raise OpenSearchApiError(
             f"malformed DLS bundle: unrecognized or missing 'governs' {governs!r} — "
             f"this package only applies bundles governing {sorted(_RECOGNIZED_GOVERNS)}"
         )
 
+
+def _require_bundle_graph(bundle: dict[str, Any]) -> None:
+    """A bundle must not be applied to data it wasn't generated for."""
     if not bundle.get("graph"):
         raise OpenSearchApiError(
             "malformed DLS bundle: missing required field 'graph' — a bundle must "
             "not be applied to data it wasn't generated for"
         )
 
+
+def _validate_rendering_entries(entries: list[Any]) -> list[dict[str, Any]]:
+    """Validate each ``renderings.opensearch`` entry has the required shape."""
     validated: list[dict[str, Any]] = []
-    for i, entry in enumerate(opensearch_renderings):
+    for i, entry in enumerate(entries):
         if not isinstance(entry, dict):
             raise OpenSearchApiError(
                 f"malformed DLS bundle: renderings.opensearch[{i}] is not an object"
@@ -96,6 +102,20 @@ def _validate_dls_bundle(bundle: dict[str, Any]) -> list[dict[str, Any]]:
             )
         validated.append(entry)
     return validated
+
+
+def _validate_dls_bundle(bundle: dict[str, Any]) -> list[dict[str, Any]]:
+    """Validate a caller-supplied DEC-CA-04 policy bundle's shape.
+
+    Fails closed with a NAMED field error (this lane's explicit negative-test
+    requirement) rather than partially applying anything. Returns the
+    validated ``renderings.opensearch`` list on success.
+    """
+    _require_bundle_is_object(bundle)
+    opensearch_renderings = _extract_opensearch_renderings(bundle)
+    _require_recognized_governs(bundle)
+    _require_bundle_graph(bundle)
+    return _validate_rendering_entries(opensearch_renderings)
 
 
 def register_opensearch_tools(mcp: FastMCP) -> None:
