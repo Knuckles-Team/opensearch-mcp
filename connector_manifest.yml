@@ -55,7 +55,11 @@ schema_mappings:
   SearchIndex:
     ontology_class: null
     fields: {}
-sync: []
+sync:
+- preset: opensearch-index-aliases
+  server: opensearch-mcp
+  tool: opensearch_get_aliases
+  tool_schema_sha256: 84cfbc3c12f2fa30626986e7aaf0683cef742f81dcbfa0ba166ee94e898194aa
 provenance:
   generated_by: scripts/generate_connector_manifests.py
   generated_at: '2026-08-26T21:05:00Z'

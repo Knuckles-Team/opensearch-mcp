@@ -1,0 +1,15 @@
+{
+  "_comment": "Tier-1 mcp_tool source preset for opensearch-mcp (AU-KG.ingest.mcp-tool-connector). Syncs the OpenSearch index/alias inventory into the KG via the opensearch-mcp MCP server. opensearch_get_aliases is the only read-only opensearch_* tool with no required arguments (index defaults to '*', all indices) -- every other tool either mutates state (create/update/delete/rollover index, apply DLS) or needs a caller-supplied query (search/knn_search/hybrid_search) the sync pipeline has no way to invent. Its underlying call, indices.get_alias(index='*'), returns OpenSearch's native {index_name: {aliases: {...}}} mapping, not a list, so this preset uses the mapping-record shape (see tunnel-manager's mcp_source_presets.json for the same pattern) and keys each record on the index name itself -- there is no other per-record title field in the raw response. For full typed-node ingestion use opensearch_reindex_from_kg instead (kg_ingest.py) -- the reverse direction (KG -> index), not a source preset. Contributed presets win over the central MCP_TOOL_PRESETS.",
+  "opensearch-index-aliases": {
+    "server": "opensearch-mcp",
+    "tool": "opensearch_get_aliases",
+    "params_style": "args",
+    "records_path": "",
+    "records_is_mapping": true,
+    "mapping_key_field": "source_key",
+    "id_field": "source_key",
+    "title_field": "source_key",
+    "text_field": "source_key",
+    "doc_type": "opensearch_index_alias"
+  }
+}

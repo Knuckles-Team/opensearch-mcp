@@ -1,0 +1,8 @@
+{
+  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
+  "connector": "opensearch-mcp",
+  "schema_version": "1",
+  "tools": {
+    "opensearch_get_aliases": "84cfbc3c12f2fa30626986e7aaf0683cef742f81dcbfa0ba166ee94e898194aa"
+  }
+}
