@@ -174,7 +174,16 @@ def register_opensearch_tools(mcp: FastMCP) -> None:
         """Add/remove/swap index aliases in one atomic call."""
         return get_client().manage_alias(actions)
 
-    @mcp.tool(tags={"index"})
+    @mcp.tool(
+        annotations={
+            "title": "Get OpenSearch Aliases",
+            "readOnlyHint": True,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": True,
+        },
+        tags={"index"},
+    )
     async def opensearch_get_aliases(
         index: str = Field(
             default="*", description="Index or index-pattern to inspect."
