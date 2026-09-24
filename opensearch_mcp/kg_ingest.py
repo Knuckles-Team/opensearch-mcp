@@ -28,9 +28,6 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
-)
 from fastmcp import FastMCP
 from pydantic import Field
 
@@ -40,28 +37,12 @@ _SOURCE = "opensearch-mcp"
 _DOMAIN = "opensearch"
 
 
-def ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None = None,
-    *,
-    client: Any | None = None,
-    graph: str | None = None,
-) -> dict[str, int]:
+def ingest_entities(*args: object, **kwargs: object) -> object:
     """Write canonical typed nodes and relationships through native ingestion.
 
-    Thin wrapper kept for parity with the fleet's other ``kg_ingest.py``
-    modules (egeria-mcp/lakekeeper-mcp) — used here only for
-    ``:IndexingRun`` trigger records, never for a bulk catalog walk (see
-    module docstring for why).
+    SDK-GAP: Always raises now; see KnowledgeGraphIngestUnavailable.
     """
-    return _native_ingest_entities(
-        entities,
-        relationships,
-        source=_SOURCE,
-        domain=_DOMAIN,
-        client=client,
-        graph=graph,
-    )
+    _kg_unavailable("ingest_entities")
 
 
 def _indexing_run_id(index_pattern: str, run_uuid: str) -> str:
@@ -131,3 +112,23 @@ def register_ingest_tools(mcp: FastMCP) -> None:
         Because the index is fully derived/rebuildable (DEC-CA-01), this is
         always safe to call, including from offset 0 (a full rebuild)."""
         return record_indexing_run(index_pattern)
+
+
+class KnowledgeGraphIngestUnavailable(RuntimeError):
+    """Direct-to-graph ingestion is unavailable from this connector.
+
+    SDK-GAP (EH-48x, /var/tmp/l9/finish/au-decon-G4c/SDK-GAPS.md): raised in
+    place of the old ``agent_utilities.knowledge_graph`` native-ingest call --
+    agent-connector-sdk has no facade over EG's typed ingestion protocol yet,
+    and the fleet precedent (agents/world-reference-mcp) moves direct-to-graph
+    delivery to agent_connector_sdk.runner/sinks at the deployment layer, out
+    of connector scope.
+    """
+
+
+def _kg_unavailable(name: str) -> None:
+    raise KnowledgeGraphIngestUnavailable(
+        f"{name}: direct-to-graph ingestion moved out of connector code "
+        "(agent-utilities removed); no agent-connector-sdk facade exists yet "
+        "-- see SDK-GAPS.md"
+    )

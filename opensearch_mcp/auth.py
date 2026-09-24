@@ -41,9 +41,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
-from agent_utilities.core.transport_security import resolve_configured_tls_profile
+from agent_connector_sdk.utilities import get_logger
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
 from opensearch_mcp.api.api_client_base import OpenSearchApiError
 from opensearch_mcp.api_client import Api
@@ -66,7 +66,7 @@ def _delegated_token(config: dict[str, Any] | None) -> str:
     Raises rather than returning an empty/``None`` token — there is no
     fallback path in this package to a fixed or service-level credential.
     """
-    from agent_utilities.mcp.delegated_auth import (
+    from opensearch_mcp._delegated_auth_compat import (
         get_delegated_token,
         is_delegation_enabled,
     )
@@ -105,7 +105,7 @@ def get_client(config: dict[str, Any] | None = None) -> Api:
     time.
     """
     base_url = setting("OPENSEARCH_URL", "http://localhost:9200")
-    tls_profile = resolve_configured_tls_profile(
+    tls_profile = resolve_tls_profile(
         "opensearch",
         profile_name=setting("OPENSEARCH_TLS_PROFILE", None),
         profile_ref=setting("OPENSEARCH_TLS_PROFILE_REF", None),
