@@ -66,7 +66,7 @@ def _delegated_token(config: dict[str, Any] | None) -> str:
     Raises rather than returning an empty/``None`` token — there is no
     fallback path in this package to a fixed or service-level credential.
     """
-    from opensearch_mcp._delegated_auth_compat import (
+    from agent_utilities.mcp.delegated_auth import (
         get_delegated_token,
         is_delegation_enabled,
     )
