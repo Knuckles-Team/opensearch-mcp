@@ -64,20 +64,18 @@ Pick the extra that matches what you want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | `opensearch-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `opensearch-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated A2A agent** |
 | `opensearch-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
 uv pip install "opensearch-mcp[mcp]"
 ```
 
-### Container images (`:mcp` vs `:agent`)
+### Container image
 
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds a single, right-sized image:
 
 ```bash
 docker build --target mcp   -t opensearch-mcp:mcp    .
-docker build --target agent -t opensearch-mcp:agent   .
 ```
 
 ## Usage
@@ -192,7 +190,6 @@ predicate from scratch.
 _10 package + 22 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
-
 | Variable | Required | Notes |
 |----------|----------|-------|
 | `OPENSEARCH_URL` | recommended | Bare OpenSearch origin. Defaults to `http://localhost:9200`. |
@@ -291,7 +288,6 @@ Contributions are welcome! Please ensure code quality by executing local checks 
 - Validate type-safety with `mypy .`
 - Execute test suites using `pytest`
 
-
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
 
 ## Deploy with `agent-utilities-deployment`
@@ -305,7 +301,7 @@ to **"deploy `opensearch-mcp` with agent-utilities-deployment"**.
 | Install mode | Command |
 |------|---------|
 | Installed package | `uv tool install "opensearch-mcp[mcp]"`, then run `opensearch-mcp` |
-| Editable source | `uv pip install -e ".[agent]"`, then run `opensearch-mcp` |
+| Editable source | `uv pip install -e ".[mcp]"`, then run `opensearch-mcp` |
 | Immutable container | deploy `registry.example.invalid/opensearch-mcp@sha256:<digest>` through the operator-selected orchestrator |
 
 The repository embeds no deployment profile, credential value, certificate path, or
