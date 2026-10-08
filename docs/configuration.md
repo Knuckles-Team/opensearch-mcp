@@ -13,7 +13,7 @@ fallback**. `ENABLE_DELEGATION=True` plus a working `OIDC_CONFIG_URL` /
 `OIDC_CLIENT_ID` / `OIDC_CLIENT_SECRET_REF` are required for ANY tool in this
 package to authenticate — a `search`, `security`, or `index` call made
 without a valid delegated principal token raises rather than silently
-falling back to something that would work but bypass document-level
+falling back to something that will work but bypass document-level
 security.
 
 ## `OPENSEARCH_KEYCLOAK_CLIENT_ID`
@@ -29,7 +29,7 @@ valid token for this audience carries the `roles` claim OpenSearch's
 `OPENSEARCH_TLS_PROFILE`/`OPENSEARCH_TLS_PROFILE_REF` select a named outbound
 TLS trust policy (via `agent_utilities.core.transport_security`). The
 homelab's internal CA (`homelab-arpa-ca`) is trusted fleet-wide via the
-`homelab-ca-bundle` ConfigMap mount; OpenSearch itself terminates its own TLS
+`homelab-ca-bundle` ConfigMap mount; OpenSearch itself stop its own TLS
 at `:9200` (the security plugin refuses to run without it) and the ingress
 re-encrypts rather than offloading to plain HTTP.
 

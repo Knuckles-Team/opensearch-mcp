@@ -59,12 +59,12 @@ named error rather than a bare 500 when the plugin refuses the operation.
 
 ## Installation
 
-Pick the extra that matches what you want to run:
+Pick the extra that matches what the operator want to run:
 
 | Extra | Installs | Use when |
 |-------|----------|----------|
-| `opensearch-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `opensearch-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated A2A agent** |
+| `opensearch-mcp[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | The operator only run the **MCP server** (smallest install / image) |
+| `opensearch-mcp[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | The operator run the **integrated A2A agent** |
 | `opensearch-mcp[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -116,7 +116,7 @@ python -m opensearch_mcp
 directly (the fleet's one new dependency this package adds). Its transport
 auth is `api/api_client_base.py`'s `_PerCallBearerAuth` — a
 `requests.auth.AuthBase` callable that `opensearchpy`'s
-`RequestsHttpConnection` invokes fresh on EVERY outbound request (verified
+`RequestsHttpConnection` invokes fresh on EVERY outbound request (checked
 against opensearch-py 3.2.0's own source: `RequestsHttpConnection.__init__`
 assigns `http_auth` directly to `requests.Session.auth`, and `requests` calls
 an `AuthBase.__call__` per request, never once at session construction).
@@ -140,7 +140,7 @@ authority; it never performs the reindex itself (CA-24 does).
 
 `opensearch_apply_dls_bundle` validates a caller-supplied DEC-CA-04 policy
 bundle's shape (`renderings.opensearch`, `governs: ["M1"]`, `graph`) before
-applying it — this package contains no code path that constructs a DLS
+applying it — this package contains no code path that builds a DLS
 predicate from scratch.
 
 ## Environment Variables
@@ -215,7 +215,7 @@ _10 package + 22 inherited variable(s). Auto-generated from `.env.example` + the
 | `opensearch_get_aliases` | index | Read-only alias inspection |
 | `opensearch_update_settings` | index | Update dynamic index settings |
 | `opensearch_rollover` | index | Roll a write alias to a new backing index |
-| `opensearch_delete_index` | index | Delete an index |
+| `opensearch_delete_index` | index | Remove an index |
 | `opensearch_search` | search | BM25 lexical search (capped at 100 hits) |
 | `opensearch_knn_search` | search | k-NN vector search (typed error — plugin disabled) |
 | `opensearch_hybrid_search` | search | Lexical + vector hybrid |
@@ -285,11 +285,11 @@ _3 action-routed tool(s) · 18 verbose 1:1 tool(s). Each is enabled unless its `
 
 ## Contribute
 
-Contributions are welcome! Please ensure code quality by executing local checks before submitting pull requests:
+Contributions are welcome! Please ensure code quality by running local checks before submitting pull requests:
 - Format code using `ruff format .`
 - Lint code using `ruff check .`
 - Validate type-safety with `mypy .`
-- Execute test suites using `pytest`
+- Ran test suites using `pytest`
 
 
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
