@@ -25,7 +25,7 @@
 - **The single hardest invariant in this package**, structural, not conventional:
   every OpenSearch request carries the CALLING PRINCIPAL's own bearer token,
   attached fresh on every HTTP call. `auth.get_client()` is the ONLY client
-  factory in the package — no tool anywhere accepts or constructs a second one,
+  factory in the package — no tool anywhere accepts or builds a second one,
   and there is no fallback to a fixed/service credential (a deliberate
   divergence from the fleet's usual delegated-auth pattern, where
   `gitlab-api`/`twenty-mcp` fall through to a fixed token on delegation
@@ -38,13 +38,13 @@
   this package's own live-proof tests, exercising the pre-bundle DLS
   demonstration accounts documented in `services/opensearch/AGENTS.md`
   (`ca-e2e` / `restricted-viewer`). It is never referenced by `auth.py` or by
-  any `mcp/*.py` tool — if you ever see it imported from either, that is a
+  any `mcp/*.py` tool — if the operator ever see it imported from either, that is a
   security regression, not a convenience.
 - **k-NN is disabled cluster-wide** (pre-AVX2 homelab nodes — no AVX2-free
   OpenSearch k-NN build exists upstream). `opensearch_knn_search`/
   `opensearch_hybrid_search` exist per this lane's scope but raise a typed,
   named `OpenSearchApiError` (not a bare 500) when the plugin refuses the
-  operation — verified live against the deployed cluster (2.19.6): indexing a
+  operation — checked live against the deployed cluster (2.19.6): indexing a
   `knn_vector` document and running a `knn` query both fail with
   `illegal_state_exception: "KNN plugin is disabled..."`.
 - **`opensearch_apply_dls_bundle` never hand-authors a DLS rule.** It
@@ -56,7 +56,7 @@
 - The OpenSearch index is a fully derived, rebuildable projection of the KG
   (DEC-CA-01) — `opensearch_reindex_from_kg` only records an `:IndexingRun`
   trigger node; CA-24 performs the actual walk-and-index. This package never
-  ingests OpenSearch's own content back into the KG (that would be ingesting
+  ingests OpenSearch's own content back into the KG (that will be ingesting
   a derived copy into its own source of truth).
 - OpenSearch's OIDC bearer-token auth (`services/opensearch/AGENTS.md`'s W04
   note) validates a Keycloak `homelab`-realm token directly via its
@@ -140,12 +140,12 @@ config, docs, lockfiles). The only hidden directories allowed at root are
 `~/workspace/reports/` (command output); tests go in `tests/` (pytest).
 Before finishing a task, run `git status` and confirm no stray root files were added.
 
-## Working Discipline — think, simplify, stay surgical, verify
+## Working Discipline — think, simplify, stay surgical, check
 - **Think before coding.** State assumptions explicitly; surface options rather
   than silently picking one.
 - **Simplicity first.** Minimum code that solves the stated problem.
 - **Stay surgical.** Every changed line traces to the task.
-- **Verify against a goal.** Prove behavior with a real test or a real call
+- **Check against a goal.** Prove behavior with a real test or a real call
   against the live OpenSearch deployment, not a mock alone.
 
 ## Quality Bar — Leave the Codebase Clean (REQUIRED)

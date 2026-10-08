@@ -29,11 +29,11 @@ on every single prepared request — not once at session construction — so a
 token that expires mid-session, or a caller whose identity changes between
 two tool calls in the same process, is never silently reused.
 
-`auth.py`'s `get_client()` is the ONLY place that constructs an
+`auth.py`'s `get_client()` is the ONLY place that builds an
 `OpenSearchApi`. It has no parameter that accepts an override credential, and
 no fallback: if OIDC delegation isn't enabled or the RFC 8693 token exchange
 fails, it raises `OpenSearchApiError` rather than returning something that
-would still work but silently bypass DLS. This is a deliberate divergence
+will still work but silently bypass DLS. This is a deliberate divergence
 from the fleet's usual delegated-auth pattern (`gitlab-api`/`twenty-mcp` fall
 through to a fixed token on delegation failure) — that fallback is exactly
 what this package's security contract forbids.
@@ -71,7 +71,7 @@ caller-supplied bundle's shape BEFORE calling
 4. Every rendering entry must carry `index_pattern`/`role`/`dls_query`.
 
 A missing or malformed field raises with a NAMED field error and applies
-nothing — this file contains no code path that constructs a `dls_query` from
+nothing — this file contains no code path that builds a `dls_query` from
 scratch; it only ever forwards the one it was given.
 
 ## Reindex trigger, not a reindex
