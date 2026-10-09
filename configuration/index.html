@@ -612,7 +612,7 @@ fallback</strong>. <code>ENABLE_DELEGATION=True</code> plus a working <code>OIDC
 <code>OIDC_CLIENT_ID</code> / <code>OIDC_CLIENT_SECRET_REF</code> are required for ANY tool in this
 package to authenticate — a <code>search</code>, <code>security</code>, or <code>index</code> call made
 without a valid delegated principal token raises rather than silently
-falling back to something that would work but bypass document-level
+falling back to something that will work but bypass document-level
 security.</p>
 <h2 id="opensearch_keycloak_client_id"><code>OPENSEARCH_KEYCLOAK_CLIENT_ID</code><a class="headerlink" href="#opensearch_keycloak_client_id" title="Permanent link">&para;</a></h2>
 <p>The audience the caller's own MCP-session token is exchanged for (RFC 8693).
@@ -624,7 +624,7 @@ valid token for this audience carries the <code>roles</code> claim OpenSearch's
 <p><code>OPENSEARCH_TLS_PROFILE</code>/<code>OPENSEARCH_TLS_PROFILE_REF</code> select a named outbound
 TLS trust policy (via <code>agent_utilities.core.transport_security</code>). The
 homelab's internal CA (<code>homelab-arpa-ca</code>) is trusted fleet-wide via the
-<code>homelab-ca-bundle</code> ConfigMap mount; OpenSearch itself terminates its own TLS
+<code>homelab-ca-bundle</code> ConfigMap mount; OpenSearch itself stop its own TLS
 at <code>:9200</code> (the security plugin refuses to run without it) and the ingress
 re-encrypts rather than offloading to plain HTTP.</p>
 <h2 id="k-nn-stays-disabled">k-NN stays disabled<a class="headerlink" href="#k-nn-stays-disabled" title="Permanent link">&para;</a></h2>

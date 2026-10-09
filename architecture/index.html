@@ -649,11 +649,11 @@ opensearch-py 3.2.0's own source). <code>requests</code> invokes an <code>AuthBa
 on every single prepared request — not once at session construction — so a
 token that expires mid-session, or a caller whose identity changes between
 two tool calls in the same process, is never silently reused.</p>
-<p><code>auth.py</code>'s <code>get_client()</code> is the ONLY place that constructs an
+<p><code>auth.py</code>'s <code>get_client()</code> is the ONLY place that builds an
 <code>OpenSearchApi</code>. It has no parameter that accepts an override credential, and
 no fallback: if OIDC delegation isn't enabled or the RFC 8693 token exchange
 fails, it raises <code>OpenSearchApiError</code> rather than returning something that
-would still work but silently bypass DLS. This is a deliberate divergence
+will still work but silently bypass DLS. This is a deliberate divergence
 from the fleet's usual delegated-auth pattern (<code>gitlab-api</code>/<code>twenty-mcp</code> fall
 through to a fixed token on delegation failure) — that fallback is exactly
 what this package's security contract forbids.</p>
@@ -686,7 +686,7 @@ caller-supplied bundle's shape BEFORE calling
 <li>Every rendering entry must carry <code>index_pattern</code>/<code>role</code>/<code>dls_query</code>.</li>
 </ol>
 <p>A missing or malformed field raises with a NAMED field error and applies
-nothing — this file contains no code path that constructs a <code>dls_query</code> from
+nothing — this file contains no code path that builds a <code>dls_query</code> from
 scratch; it only ever forwards the one it was given.</p>
 <h2 id="reindex-trigger-not-a-reindex">Reindex trigger, not a reindex<a class="headerlink" href="#reindex-trigger-not-a-reindex" title="Permanent link">&para;</a></h2>
 <p><code>kg_ingest.py</code>'s <code>opensearch_reindex_from_kg</code> records one <code>:IndexingRun</code> node
