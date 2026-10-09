@@ -39,16 +39,16 @@ authenticates successfully against ``http://localhost:9200/_cluster/health``.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
-from agent_utilities.base_utilities import get_logger
-from agent_utilities.core.config import setting
-from agent_utilities.core.transport_security import resolve_configured_tls_profile
+from agent_connector_sdk.config import setting
+from agent_connector_sdk.tls.resolve import resolve_tls_profile
 
 from opensearch_mcp.api.api_client_base import OpenSearchApiError
 from opensearch_mcp.api_client import Api
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 # Keycloak grants a broad default scope set (observed live: "profile email");
 # the `opensearch` client does not require a distinct custom scope the way
@@ -66,7 +66,17 @@ def _delegated_token(config: dict[str, Any] | None) -> str:
     Raises rather than returning an empty/``None`` token — there is no
     fallback path in this package to a fixed or service-level credential.
     """
-    from agent_utilities.mcp.delegated_auth import (
+    # NOTE: intentionally still agent_utilities, like agent_server.py (see recipe
+    # Pitfall #1). agent_connector_sdk.auth.delegation exists but
+    # agent_connector_sdk.mcp.server.create_mcp_server's own module docstring
+    # states it deliberately leaves "delegation ... middleware" out of the
+    # ported server construction, and no fleet connector (gitlab-api,
+    # twenty-mcp, etc.) has yet proven that wiring end-to-end. This file's
+    # entire contract is "never fall back to a bypass credential" (CA-43) —
+    # swapping this import without a verified, request-scoped equivalent
+    # would risk a silent security regression, so it stays on the
+    # fleet-proven agent_utilities path pending that verification.
+    from agent_utilities.mcp.delegated_auth import (  # noqa: PLC0415
         get_delegated_token,
         is_delegation_enabled,
     )
@@ -105,7 +115,7 @@ def get_client(config: dict[str, Any] | None = None) -> Api:
     time.
     """
     base_url = setting("OPENSEARCH_URL", "http://localhost:9200")
-    tls_profile = resolve_configured_tls_profile(
+    tls_profile = resolve_tls_profile(
         "opensearch",
         profile_name=setting("OPENSEARCH_TLS_PROFILE", None),
         profile_ref=setting("OPENSEARCH_TLS_PROFILE_REF", None),
